@@ -27,7 +27,6 @@ if (!port){
 }
 
 const processMessage = function(msg) {
-console.log (msg)
   switch (Object.keys(msg)[0]) {
     case 'instantaneousdemand':
       // Current demand in W
