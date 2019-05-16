@@ -1,0 +1,30 @@
+{
+  "name": "eagle-mqtt-bridge",
+  "version": "0.1.0",
+  "description": "Rainforest Eagle to MQTT bridge.",
+  "main": "bridge.js",
+  "scripts": {
+    "start": "node bridge.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/thevoltagesource/eagle-mqtt-bridge.git"
+  },
+  "keywords": [
+    "rainforest",
+    "eagle",
+    "monitor",
+    "mqtt"
+  ],
+  "author": "Jacob Southard <jacob@thevoltagesource.com> (https://thevoltagesource.com)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/thevoltagesource/eagle-mqtt-bridge/issues"
+  },
+  "homepage": "https://github.com/thevoltagesource/eagle-mqtt-bridge#readme",
+  "dependencies": {
+    "express": "^4.16.4",
+    "express-xml-bodyparser": "^0.3.0",
+    "mqtt": "^2.18.8"
+  }
+}
