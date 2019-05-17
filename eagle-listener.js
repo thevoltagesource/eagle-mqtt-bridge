@@ -20,6 +20,10 @@ http.post('/', function(req, res) {
   }
 })
 
+http.get('/', function(req, res) {
+  res.send('<h2>Rainforest Eagle to MQTT Bridge.</h2><p><a href="https://github.com/thevoltagesource/eagle-mqtt-bridge#readme">Documentation</a></p>')
+})
+
 if (!port){
   console.log('Lisenter port not specified')
 } else {
