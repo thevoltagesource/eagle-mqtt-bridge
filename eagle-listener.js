@@ -1,9 +1,9 @@
-
 const express = require('express')
 const xmlparser = require('express-xml-bodyparser')
 const EventEmitter = require('events')
+const logger = require('./logger.js')
 
-const port = process.env.LISTEN_PORT
+const port = process.env.LISTEN_PORT ? process.env.LISTEN_PORT : 3000
 
 module.exports = new EventEmitter()
 
@@ -16,7 +16,7 @@ http.post('/', function(req, res) {
   if ('rainforest' in req.body) {
      processMessage(req.body.rainforest)
   } else {
-    console.log('Received invalid POST from IP:')
+    logger.debug('Received invalid data in POST')
   }
 })
 
@@ -24,11 +24,7 @@ http.get('/', function(req, res) {
   res.send('<h2>Rainforest Eagle to MQTT Bridge.</h2><p><a href="https://github.com/thevoltagesource/eagle-mqtt-bridge#readme">Documentation</a></p>')
 })
 
-if (!port){
-  console.log('Lisenter port not specified')
-} else {
-  http.listen(port, () => console.log(`Listening for Eagle on port ${port}`))
-}
+http.listen(port, () => logger.info(`Listening for Eagle messages on port ${port}`))
 
 const processMessage = function(msg) {
   switch (Object.keys(msg)[0]) {
@@ -156,10 +152,10 @@ const processMessage = function(msg) {
     case 'scheduleinfo':
       break
     default:
-      console.log('Unknown message type:', key)
+      logger.debug('Unknown message type:', key)
   }
   if (message) {
-      console.log(message)
+      logger.debug(message)
       module.exports.emit('message', message)
   }
 }
