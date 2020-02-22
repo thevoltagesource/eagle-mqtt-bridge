@@ -1,6 +1,7 @@
 const express = require('express')
 const xmlparser = require('express-xml-bodyparser')
 const EventEmitter = require('events')
+const util = require('util')
 const logger = require('./logger.js')
 
 const port = process.env.LISTEN_PORT ? process.env.LISTEN_PORT : 3000
@@ -155,7 +156,7 @@ const processMessage = function(msg) {
       logger.debug('Unknown message type:', key)
   }
   if (message) {
-      logger.debug(message)
+      logger.debug(util.format(message))
       module.exports.emit('message', message)
   }
 }
