@@ -15,9 +15,30 @@ if (!host) {
   mqtt.connect();
 }
 
+var wasalive = true
+
+function isalive(alive) {
+  if (alive) {
+    if (wasalive) {
+      mqtt.sendMessage('availability', 'online', true)
+    }
+    wasalive = true
+    logger.info('alive')
+  }
+  if (!alive) {
+    if (!wasalive) {
+      mqtt.sendMessage('availability', 'offline', true)
+    }
+    wasalive=false
+    logger.info('dead')
+  }
+}
+
+setInterval(isalive, 15000, false)
 
 eagle.on('message', (message) => {
   Object.keys(message).forEach(function(key) {
     mqtt.sendMessage(key, message[key])
   })
+  isalive(true)
 })

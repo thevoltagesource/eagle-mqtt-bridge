@@ -86,7 +86,7 @@ const processMessage = function(msg) {
       //  shortaddr: [ '0x3cc9' ],
       //  linkstrength: [ '0x5a' ],
       //  port: [ '/dev/ttySP0' ] }
-      var message = {'status': status, 'signal': signal, 'channel': channel}
+      var message = {'zigbee/status': status, 'zigbee/signal': signal, 'zigbee/channel': channel}
       break
     case 'messagecluster':
       //{ devicemacid: [ '0xd8d5b90000003e58' ],

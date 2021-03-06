@@ -16,7 +16,7 @@ class MqttClient {
 
   connect() {
     var connectOptions = {
-        will: {topic: this.topic_base + '/availability', payload: 'Offline', retain: true}
+        will: {topic: this.topic_base + '/bridge/status', payload: 'offline', retain: true}
     }
     if (this.username) {
       connectOptions.username = this.username
@@ -34,7 +34,7 @@ class MqttClient {
     this.client.on('connect', () => {
       logger.info('MQTT client connected')
       logger.info('Publishing to topic base: ' + this.topic_base)
-      this.client.publish(this.topic_base + '/availability', 'Online', {retain: true})
+      this.client.publish(this.topic_base + '/bridge/status', 'online', {retain: true})
     })
 
     this.client.on('close', () => {
@@ -42,8 +42,8 @@ class MqttClient {
     })
   }
 
-  sendMessage(topic, message) {
-      this.client.publish(this.topic_base + '/' + topic, message.toString())
+  sendMessage(topic, message, flag=false) {
+      this.client.publish(this.topic_base + '/' + topic, message.toString(), {retain: flag})
   }
 }
 
