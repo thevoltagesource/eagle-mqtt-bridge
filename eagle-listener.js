@@ -58,7 +58,9 @@ const processMessage = function(msg) {
       var div = parseInt(node.divisor[0], 16)
       var divisor = div ? div : 1 //If zero use 1
       var delivered = parseInt(node.summationdelivered[0], 16)
-      var value = parseInt((delivered * multiplier)/divisor)
+      var value = parseInt(((delivered * multiplier)/divisor)*1000)
+      var received = parseInt(node.summationreceived[0], 16)
+      var value2 = parseInt(((received * multiplier)/divisor)*1000)
       //{ devicemacid: [ '0xd8d5b90000003e58' ],
       //  metermacid: [ '0x00078100001d2c64' ],
       //  timestamp: [ '0x246d00c8' ],
@@ -70,7 +72,7 @@ const processMessage = function(msg) {
       //  digitsleft: [ '0x06' ],
       //  suppressleadingzero: [ 'Y' ],
       //  port: [ '/dev/ttySP0' ] }
-      var message = {'meter/reading': value}
+      var message = {'meter/reading': value, 'meter/received': value2}
       break
     case 'networkinfo':
       var node = msg.networkinfo[0]
