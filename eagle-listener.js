@@ -5,6 +5,7 @@ const util = require('util')
 const logger = require('./logger.js')
 
 const port = process.env.LISTEN_PORT ? process.env.LISTEN_PORT : 3000
+const hires = process.env.SUMMATION_WATTS.toUpperCase() === 'TRUE' ? true : false
 
 module.exports = new EventEmitter()
 
@@ -51,14 +52,16 @@ const processMessage = function(msg) {
       var message = {'meter/demand': value}
       break
     case 'currentsummationdelivered':
-      // Current meter reading in kWh
+      // Current meter reading in kWh (W if hires)
       var node = msg.currentsummationdelivered[0]
       var mult = parseInt(node.multiplier[0], 16)
       var multiplier = mult ? mult : 1  //If zero use 1
       var div = parseInt(node.divisor[0], 16)
       var divisor = div ? div : 1 //If zero use 1
       var delivered = parseInt(node.summationdelivered[0], 16)
-      var value = parseInt((delivered * multiplier)/divisor)
+      var dvalue = hires ? parseInt(((delivered * multiplier)/divisor) * 1000) : parseInt((delivered * multiplier)/divisor)
+      var received = parseInt(node.summationreceived[0], 16)
+      var rvalue = hires ? parseInt(((received * multiplier)/divisor) * 1000) : parseInt((received * multiplier)/divisor)      
       //{ devicemacid: [ '0xd8d5b90000003e58' ],
       //  metermacid: [ '0x00078100001d2c64' ],
       //  timestamp: [ '0x246d00c8' ],
@@ -70,7 +73,7 @@ const processMessage = function(msg) {
       //  digitsleft: [ '0x06' ],
       //  suppressleadingzero: [ 'Y' ],
       //  port: [ '/dev/ttySP0' ] }
-      var message = {'meter/reading': value}
+      var message = {'meter/reading': dvalue, 'meter/delivered': dvalue, 'meter/received': rvalue}
       break
     case 'networkinfo':
       var node = msg.networkinfo[0]
@@ -153,7 +156,7 @@ const processMessage = function(msg) {
     case 'scheduleinfo':
       break
     default:
-      logger.debug('Unknown message type:', key)
+      logger.debug(util.format('Unknown message type:', key))
   }
   if (message) {
       logger.debug(util.format(message))

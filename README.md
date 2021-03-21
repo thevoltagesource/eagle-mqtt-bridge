@@ -1,8 +1,6 @@
 # Rainforest Eagle to MQTT bridge
-This application creates an HTTP listener to capture XML from the Rainforest Eagle, parse the XML, and publish select data to the specified MQTT host.
-
-This is available as a Docker container and can be found on [Docker Hub](https://hub.docker.com/repository/docker/thevoltagesource/eagle-mqtt-bridge). 
-![Docker Pulls](https://img.shields.io/docker/pulls/thevoltagesource/eagle-mqtt-bridge)
+![Docker Pulls](https://img.shields.io/docker/pulls/thevoltagesource/eagle-mqtt-bridge)<br>
+This application creates an HTTP listener to capture XML from the Rainforest Eagle, parse the XML, and publish select data to the specified MQTT host. This is available as a Docker container on [Docker Hub](https://hub.docker.com/repository/docker/thevoltagesource/eagle-mqtt-bridge).  
 
 Settings are passed to the app through environment variables.
 
@@ -11,19 +9,21 @@ Settings are passed to the app through environment variables.
 * MQTT_USER=username - MQTT username if authentication is required.
 * MQTT_PASS=password - MQTT password if authentication is required.
 * LISTEN_PORT=3000 - HTTP Port the bridge will listen on, default is ```3000```.
-* LOG_LEVEL=debug - Specify desired log level, default is ```info```.
+* LOG_LEVEL=info - Specify desired log level, default is ```info```.
+* SUMMATION_WATTS=false - Set to ```true``` for summation values in Watt Hours (Wh), default is ```false``` for Kilowatt Hours (kWh)
 
-Device status is tracked (```online``` and ```offline```) on topic ```MQTT_TOPIC/availability```
+Device status is tracked (```online``` and ```offline```) on topic ```MQTT_TOPIC/availability```<br>
+Bridge status is tracked (```online``` and ```offline```) on topic```MQTT_TOPIC/bridge/status``` (retained)
 
-The bridge publishes birth (```online```) and LWT (```offline```) messages to ```MQTT_TOPIC/bridge/status```
-
-Current supported messages:
-
+Current supported messages:<br>
 * Instantanious Demand (in Watts): ```MQTT_TOPIC/meter/demand```
-* Summation Delivered (in kWh): ```MQTT_TOPIC/meter/reading```
+* DEPRECATED - Meter Reading (Same as Summation Delivered): ```MQTT_TOPIC/meter/reading```
+* Summation Delivered (rounded to neaest kWh or Wh): ```MQTT_TOPIC/meter/delivered```
+* Summation Received (rounded to nearest kWh or Wh): ```MQTT_TOPIC/meter/received```
 * Zigbee Status: ```MQTT_TOPIC/zigbee/status```
 * Zigbee Signal Strength: ```MQTT_TOPIC/zigbee/signal```
 * Zigbee Channel: ```MQTT_TOPIC/zigbee/channel```
 
-Details of most Eagle messages are in the code and can be used to enable additional published data.
+Please note the Meter Reading topic will dropped in a future version in favor of the Summation Delivered topic.
 
+Details of most Eagle messages are in the code and can be used to enable additional published data.
