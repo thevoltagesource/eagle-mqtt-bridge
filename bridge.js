@@ -23,14 +23,12 @@ function isalive(alive) {
       mqtt.sendMessage('availability', 'online', true)
     }
     wasalive = true
-    logger.info('alive')
   }
   if (!alive) {
     if (!wasalive) {
       mqtt.sendMessage('availability', 'offline', true)
     }
     wasalive=false
-    logger.info('dead')
   }
 }
 
