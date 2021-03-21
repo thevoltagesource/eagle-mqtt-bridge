@@ -20,13 +20,13 @@ var wasalive = true
 function isalive(alive) {
   if (alive) {
     if (wasalive) {
-      mqtt.sendMessage('availability', 'online', true)
+      mqtt.sendMessage('availability', 'online')
     }
     wasalive = true
   }
   if (!alive) {
     if (!wasalive) {
-      mqtt.sendMessage('availability', 'offline', true)
+      mqtt.sendMessage('availability', 'offline')
     }
     wasalive=false
   }
