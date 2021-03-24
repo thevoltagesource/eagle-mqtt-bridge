@@ -4,7 +4,7 @@ This application creates an HTTP listener to capture XML from the Rainforest Eag
 
 Settings are passed to the app through environment variables.
 
-* **MQTT_HOST=ip.ad.re.ss - REQUIRED - IP or FQDN of your MQTT broker.**
+* **MQTT_HOST=ip.ad.re.ss - REQUIRED - IP of your MQTT broker.**
 * MQTT_TOPIC=eagle - Base MQTT topic for published messages, default is ```eagle```.
 * MQTT_USER=username - MQTT username if authentication is required.
 * MQTT_PASS=password - MQTT password if authentication is required.
