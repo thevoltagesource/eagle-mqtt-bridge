@@ -10,7 +10,8 @@ class MqttClient {
       this.username = username
       this.password = password
     } else {
-      logger.warn(`No authentication for MQTT connection specified`)
+      logger.warn('Missing or incomplete credentials provided for MQTT connection.')
+      logger.warn('Will attempt unauthenticated connection.')
     }
   }
 
@@ -18,7 +19,7 @@ class MqttClient {
     var connectOptions = {
         will: {topic: this.topic_base + '/bridge/status', payload: 'offline', retain: true}
     }
-    if (this.username) {
+    if (this.username && this.password) {
       connectOptions.username = this.username
       connectOptions.password = this.password
     }

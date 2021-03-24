@@ -4,8 +4,11 @@ const EventEmitter = require('events')
 const util = require('util')
 const logger = require('./logger.js')
 
-const port = process.env.LISTEN_PORT ? process.env.LISTEN_PORT : 3000
-const hires = process.env.SUMMATION_WATTS.toUpperCase() === 'TRUE' ? true : false
+regex = new RegExp('^\\d{2,6}$')
+const port = regex.test(process.env.LISTEN_PORT) ? process.env.LISTEN_PORT : 3000
+
+regex = new RegExp('^true$', 'i')
+const hires = regex.test(process.env.SUMMATION_WATTS) ? true : false
 
 module.exports = new EventEmitter()
 
