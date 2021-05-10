@@ -5,7 +5,7 @@ class MqttClient {
   constructor(host, username, password, topic_base) {
     this.client = null
     this.topic_base = topic_base
-    this.host = 'mqtt://'+ host
+    this.host = 'mqtt://' + host
     if (username && password) {
       this.username = username
       this.password = password
@@ -28,7 +28,7 @@ class MqttClient {
     this.client = mqtt.connect(this.host, connectOptions)
 
     this.client.on('error', (err) => {
-      logger.error("\x1b[31m%s\x1b[0m", 'MQTT Error: ' + err.message)
+      logger.error('MQTT Error: ' + err.message)
       this.client.end()
     })
 

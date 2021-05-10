@@ -1,7 +1,6 @@
 const express = require('express')
 const xmlparser = require('express-xml-bodyparser')
 const EventEmitter = require('events')
-const util = require('util')
 const logger = require('./logger.js')
 
 regex = new RegExp('^\\d{2,6}$')
@@ -159,10 +158,10 @@ const processMessage = function(msg) {
     case 'scheduleinfo':
       break
     default:
-      logger.debug(util.format('Unknown message type:', key))
+      logger.debug('Unknown message type: ' + Object.keys(msg))
   }
   if (message) {
-      logger.debug(util.format(message))
+      logger.debug(message)
       module.exports.emit('message', message)
   }
 }
