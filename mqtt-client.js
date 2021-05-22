@@ -29,7 +29,6 @@ class MqttClient {
 
     this.client.on('error', (err) => {
       logger.error('MQTT Error: ' + err.message)
-      this.client.end()
     })
 
     this.client.on('connect', () => {
