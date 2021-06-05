@@ -75,7 +75,7 @@ const processMessage = function(msg) {
       //  digitsleft: [ '0x06' ],
       //  suppressleadingzero: [ 'Y' ],
       //  port: [ '/dev/ttySP0' ] }
-      var message = {'meter/reading': dvalue, 'meter/delivered': dvalue, 'meter/received': rvalue}
+      var message = {'meter/delivered': dvalue, 'meter/received': rvalue}
       break
     case 'networkinfo':
       var node = msg.networkinfo[0]
@@ -120,6 +120,9 @@ const processMessage = function(msg) {
       //  port: [ '/dev/ttySP0', '/dev/ttySP0' ] }
       break
     case 'pricecluster':
+      var node = msg.pricecluster[0]
+      var price = parseInt(node.price[0], 16)
+      var tier = parseInt(node.tier[0], 16)
       //{ devicemacid: [ '0xd8d5b90000003e58' ],
       //  metermacid: [ '0x00078100001d2c64' ],
       //  timestamp: [ '0xffffffff' ],
@@ -131,6 +134,7 @@ const processMessage = function(msg) {
       //  duration: [ '0xffff' ],
       //  ratelabel: [ 'Set by User' ],
       //  port: [ '/dev/ttySP0' ] }
+      var message = {'pricing/price': price, 'pricing/tier': tier}
       break
     case 'timecluster':
       //{ devicemacid: [ '0xd8d5b90000003e58' ],
