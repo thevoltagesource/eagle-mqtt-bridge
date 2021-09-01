@@ -126,6 +126,8 @@ const processMessage = function(msg) {
     case 'pricecluster':
       var node = msg.pricecluster[0]
       var price = parseInt(node.price[0], 16)
+      var trailingdigits = parseInt(node.trailingdigits[0], 16)
+      price = price / 10 ** trailingdigits
       var tier = parseInt(node.tier[0], 16)
       //{ devicemacid: [ '0xd8d5b90000003e58' ],
       //  metermacid: [ '0x00078100001d2c64' ],
