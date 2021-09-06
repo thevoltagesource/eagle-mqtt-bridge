@@ -40,6 +40,10 @@ const processMessage = function(msg) {
       var div = parseInt(node.divisor[0], 16)
       var divisor = div ? div : 1 //If zero use 1
       var demand = parseInt(node.demand[0], 16)
+      if (demand > 2147483648) {
+         // If > max value for 32-bit signed int, convert to two's complement for negative demand
+         demand = (~demand + 1) * -1
+     }
       var value = parseInt(((demand * multiplier)/divisor) * 1000)
       //{ devicemacid: [ '0xd8d5b90000003e58' ],
       //  metermacid: [ '0x00078100001d2c64' ],
@@ -122,6 +126,8 @@ const processMessage = function(msg) {
     case 'pricecluster':
       var node = msg.pricecluster[0]
       var price = parseInt(node.price[0], 16)
+      var trailingdigits = parseInt(node.trailingdigits[0], 16)
+      price = price / 10 ** trailingdigits
       var tier = parseInt(node.tier[0], 16)
       //{ devicemacid: [ '0xd8d5b90000003e58' ],
       //  metermacid: [ '0x00078100001d2c64' ],
