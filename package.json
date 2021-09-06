@@ -1,6 +1,6 @@
 {
   "name": "eagle-mqtt-bridge",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "Rainforest Eagle to MQTT bridge.",
   "main": "bridge.js",
   "scripts": {
@@ -25,7 +25,7 @@
   "dependencies": {
     "express": "^4.17.1",
     "express-xml-bodyparser": "^0.3.0",
-    "mqtt": "^4.2.0",
+    "mqtt": "^4.2.8",
     "winston": "^3.3.3"
   }
 }
