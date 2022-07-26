@@ -13,7 +13,7 @@ module.exports = new EventEmitter()
 
 var http = express()
 
-http.use(xmlparser({ignoreAttrs: true}));
+http.use(xmlparser({ignoreAttrs: true}))
 
 http.post('/', function(req, res) {
   res.send('OK')
