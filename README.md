@@ -2,6 +2,8 @@
 ![Docker Pulls](https://img.shields.io/docker/pulls/thevoltagesource/eagle-mqtt-bridge)<br>
 This application creates an HTTP listener to capture XML from the Rainforest Eagle, parse the XML, and publish select data to the specified MQTT host. This is available as a Docker container on [Docker Hub](https://hub.docker.com/repository/docker/thevoltagesource/eagle-mqtt-bridge).  
 
+[Home Assistant](https://www.home-assistant.io) users can now skip the manual YAML config by enabling discovery!  This will create two devices under the MQTT integration. One for the bridge and one for the Eagle.
+
 Settings are passed to the app through environment variables.
 
 * **MQTT_HOST=ip.ad.re.ss - REQUIRED - IP of your MQTT broker.**
@@ -11,6 +13,7 @@ Settings are passed to the app through environment variables.
 * LISTEN_PORT=3000 - HTTP Port the bridge will listen on, default is ```3000```.
 * LOG_LEVEL=info - Specify desired log level, default is ```info```.
 * SUMMATION_WATTS=false - Set to ```true``` for summation values in Watt Hours (Wh), default is ```false``` for Kilowatt Hours (kWh)
+* HA_DISCOVERY=false - Set to ```true``` to publish Home Assistant discovery messages.
 
 Device status is tracked (```online``` and ```offline```) on topic ```MQTT_TOPIC/availability```<br>
 Bridge status is tracked (```online``` and ```offline```) on topic```MQTT_TOPIC/bridge/status``` (retained)
