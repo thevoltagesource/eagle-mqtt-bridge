@@ -39,7 +39,7 @@ function buildDiscovery(topic_base) {
 	const eagle_meter_demand_topic = 'homeassistant/sensor/rfeagle_meter_demand/config'
 	const eagle_meter_demand_message = {
 	  ...eagle_device,
-	  "name": "Rainforest Eagle Meter Demand",
+	  "name": "Rainforest Eagle Energy Demand",
 	  "unique_id": "rfeagle_demand",
 	  "unit_of_measurement": "W",
 	  "device_class": "power"  
@@ -49,7 +49,7 @@ function buildDiscovery(topic_base) {
 	const eagle_meter_delivered_topic = 'homeassistant/sensor/rfeagle_meter_delivered/config'
 	const eagle_meter_delivered_message = {
 	  ...eagle_device,
-	  "name": "Rainforest Eagle Meter Delivered",
+	  "name": "Rainforest Eagle Energy Delivered",
 	  "unique_id": "rfeagle_delivered",
 	  "unit_of_measurement": "kWh",
 	  "device_class": "energy"
@@ -59,7 +59,7 @@ function buildDiscovery(topic_base) {
 	const eagle_meter_received_topic = 'homeassistant/sensor/rfeagle_meter_received/config'
 	const eagle_meter_received_message = {
 	  ...eagle_device,
-	  "name": "Rainforest Eagle Meter Received",
+	  "name": "Rainforest Eagle Energy Received",
 	  "unique_id": "rfeagle_received",
 	  "unit_of_measurement": "kWh",
 	  "device_class": "energy"  
@@ -70,7 +70,7 @@ function buildDiscovery(topic_base) {
 	const eagle_pricing_price_message = {
 	  ...eagle_device,
 	  "name": "Rainforest Eagle Price",
-	  "unique_id": "003e58_price",
+	  "unique_id": "rfeagle_price",
 	  "unit_of_measurement": "$/kWh",
 	  "device_class": "monetary"  
 	}
@@ -80,7 +80,7 @@ function buildDiscovery(topic_base) {
 	const eagle_pricing_tier_message = {
 	  ...eagle_device,
 	  "name": "Rainforest Eagle Pricing Tier",
-	  "unique_id": "rfeagle_price_tier",
+	  "unique_id": "rfeagle_price_tier"
 	}
 	eagle_pricing_tier_message["state_topic"] = topic_base + "/pricing/tier"
 
@@ -91,7 +91,7 @@ function buildDiscovery(topic_base) {
 	  "unique_id": "rfeagle_zigbee_status",
 	  "payload_on": "Connected",
 	  "payload_off": "Disconnected",
-	  "device_class": "connectivity"
+	  "device_class": "connectivity",
 	  "entity_category": "diagnostic"
 	}
 	eagle_zigbee_status_message["state_topic"] = topic_base + "/zigbee/status"
@@ -101,7 +101,7 @@ function buildDiscovery(topic_base) {
 	  ...eagle_device,
 	  "name": "Rainforest Eagle Zigbee Signal",
 	  "unique_id": "rfeagle_zigbee_signal",
-	  "unit_of_measurement": "%"
+	  "unit_of_measurement": "%",
 	  "entity_category": "diagnostic"
 	}
 	eagle_zigbee_signal_message["state_topic"] = topic_base + "/zigbee/signal"
