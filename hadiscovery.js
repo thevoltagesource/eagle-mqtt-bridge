@@ -30,7 +30,7 @@ function buildDiscovery(topic_base) {
 	    "name": "Eagle to MQTT Bridge",
 	    "manufacturer": "The Voltage Source",
 	    "model": "Software bridge",
-	    "sw_version": "1.2.1"
+	    "sw_version": "1.3.0"
 	  },
 	  "device_class": "running"
 	}
@@ -71,7 +71,7 @@ function buildDiscovery(topic_base) {
 	  ...eagle_device,
 	  "name": "Rainforest Eagle Price",
 	  "unique_id": "003e58_price",
-	  "unit_of_measurement": "$",
+	  "unit_of_measurement": "$/kWh",
 	  "device_class": "monetary"  
 	}
 	eagle_pricing_price_message["state_topic"] = topic_base + "/pricing/price"
@@ -89,9 +89,10 @@ function buildDiscovery(topic_base) {
 	  ...eagle_device,
 	  "name": "Rainforest Eagle Zigbee Status",
 	  "unique_id": "rfeagle_zigbee_status",
-	  "payload_on": "connected",
-	  "payload_off": "disconnected",
+	  "payload_on": "Connected",
+	  "payload_off": "Disconnected",
 	  "device_class": "connectivity"
+	  "entity_category": "diagnostic"
 	}
 	eagle_zigbee_status_message["state_topic"] = topic_base + "/zigbee/status"
 
@@ -101,6 +102,7 @@ function buildDiscovery(topic_base) {
 	  "name": "Rainforest Eagle Zigbee Signal",
 	  "unique_id": "rfeagle_zigbee_signal",
 	  "unit_of_measurement": "%"
+	  "entity_category": "diagnostic"
 	}
 	eagle_zigbee_signal_message["state_topic"] = topic_base + "/zigbee/signal"
 
@@ -109,6 +111,7 @@ function buildDiscovery(topic_base) {
 	  ...eagle_device,
 	  "name": "Rainforest Eagle Zigbee Channel",
 	  "unique_id": "rfeagle_zigbee_channel",
+	  "entity_category": "diagnostic"
 	}
 	eagle_zigbee_channel_message["state_topic"] = topic_base + "/zigbee/channel"
 
