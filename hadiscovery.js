@@ -52,7 +52,7 @@ function buildDiscovery(topic_base) {
 	  "name": "Rainforest Eagle Energy Delivered",
 	  "unique_id": "rfeagle_delivered",
 	  "unit_of_measurement": "kWh",
-          "state_class": "total_increasing",
+      "state_class": "total_increasing",
 	  "device_class": "energy"
 	}
 	eagle_meter_delivered_message["state_topic"] = topic_base + "/meter/delivered"
