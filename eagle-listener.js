@@ -3,7 +3,7 @@ const xmlparser = require('express-xml-bodyparser')
 const EventEmitter = require('events')
 const logger = require('./logger.js')
 
-regex = new RegExp('^\\d{2,6}$')
+regex = new RegExp('^\\d{1,5}$')
 const port = regex.test(process.env.LISTEN_PORT) ? process.env.LISTEN_PORT : 3000
 
 regex = new RegExp('^true$', 'i')
