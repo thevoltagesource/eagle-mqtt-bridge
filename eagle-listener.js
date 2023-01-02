@@ -31,10 +31,17 @@ http.get('/', function(req, res) {
 http.listen(port, () => logger.info(`Listening for Eagle messages on port ${port}`))
 
 const processMessage = function(msg) {
-  switch (Object.keys(msg)[0]) {
+  for (const [type, nodes] of Object.entries(msg)) {
+    for (const node of nodes) {
+      processNode(type, node)
+    }
+  }
+}
+
+const processNode = function(type, node) {
+  switch (type) {
     case 'instantaneousdemand':
       // Current demand in W
-      var node = msg.instantaneousdemand[0]
       var mult = parseInt(node.multiplier[0], 16)
       var multiplier = mult ? mult : 1  //If zero use 1
       var div = parseInt(node.divisor[0], 16)
@@ -57,17 +64,26 @@ const processMessage = function(msg) {
       //  port: [ '/dev/ttySP0' ] }
       var message = {'meter/demand': value}
       break
-    case 'currentsummationdelivered':
+    case 'readattributesresponse':
+      break
+    case 'currentsummationdelivered': // v1
+    case 'currentsummation':  // v2
       // Current meter reading in kWh (W if hires)
-      var node = msg.currentsummationdelivered[0]
       var mult = parseInt(node.multiplier[0], 16)
       var multiplier = mult ? mult : 1  //If zero use 1
       var div = parseInt(node.divisor[0], 16)
       var divisor = div ? div : 1 //If zero use 1
-      var delivered = parseInt(node.summationdelivered[0], 16)
-      var dvalue = hires ? parseInt(((delivered * multiplier)/divisor) * 1000) : parseInt((delivered * multiplier)/divisor)
-      var received = parseInt(node.summationreceived[0], 16)
-      var rvalue = hires ? parseInt(((received * multiplier)/divisor) * 1000) : parseInt((received * multiplier)/divisor)      
+      var message = {}
+      if (node.summationdelivered) {
+        var delivered = parseInt(node.summationdelivered[0], 16)
+        var dvalue = hires ? parseInt(((delivered * multiplier)/divisor) * 1000) : parseInt((delivered * multiplier)/divisor)
+        message['meter/delivered'] = dvalue
+      }
+      if (node.summationreceived) {
+        var received = parseInt(node.summationreceived[0], 16)
+        var rvalue = hires ? parseInt(((received * multiplier)/divisor) * 1000) : parseInt((received * multiplier)/divisor)
+        message['meter/received'] = rvalue
+      }
       //{ devicemacid: [ '0xd8d5b90000003e58' ],
       //  metermacid: [ '0x00078100001d2c64' ],
       //  timestamp: [ '0x246d00c8' ],
@@ -79,10 +95,9 @@ const processMessage = function(msg) {
       //  digitsleft: [ '0x06' ],
       //  suppressleadingzero: [ 'Y' ],
       //  port: [ '/dev/ttySP0' ] }
-      var message = {'meter/delivered': dvalue, 'meter/received': rvalue}
       break
-    case 'networkinfo':
-      var node = msg.networkinfo[0]
+    case 'networkinfo':  // v1
+    case 'connectionstatus':  // v2
       var status = node.status[0]
       var signal = parseInt(node.linkstrength[0], 16)
       var channel = parseInt(node.channel[0], 10)
@@ -124,7 +139,6 @@ const processMessage = function(msg) {
       //  port: [ '/dev/ttySP0', '/dev/ttySP0' ] }
       break
     case 'pricecluster':
-      var node = msg.pricecluster[0]
       var price = parseInt(node.price[0], 16)
       var trailingdigits = parseInt(node.trailingdigits[0], 16)
       price = price / 10 ** trailingdigits
@@ -168,7 +182,7 @@ const processMessage = function(msg) {
     case 'scheduleinfo':
       break
     default:
-      logger.debug('Unknown message type: ' + Object.keys(msg))
+      logger.debug('Unknown message type: ' + type)
   }
   if (message) {
       logger.debug(message)
