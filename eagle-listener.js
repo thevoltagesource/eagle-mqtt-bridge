@@ -43,7 +43,7 @@ const processMessage = function(msg) {
       if (demand > 2147483648) {
          // If > max value for 32-bit signed int, convert to two's complement for negative demand
          demand = (~demand + 1) * -1
-     }
+      }
       var value = parseInt(((demand * multiplier)/divisor) * 1000)
       //{ devicemacid: [ '0xd8d5b90000003e58' ],
       //  metermacid: [ '0x00078100001d2c64' ],
