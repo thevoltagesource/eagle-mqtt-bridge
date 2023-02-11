@@ -27,28 +27,29 @@ if (!host) {
   mqtt.connect()
 }
 
-var wasalive = true
+var aliveTimeout;
 
 function isalive(alive) {
   if (alive) {
-    if (wasalive) {
+    if (!aliveTimeout) {
       mqtt.sendMessage('availability', 'online')
+    } else {
+      clearTimeout(aliveTimeout);
     }
-    wasalive = true
+    aliveTimeout = setTimeout(isalive, 15000, false);
   }
-  if (!alive) {
-    if (!wasalive) {
-      mqtt.sendMessage('availability', 'offline')
-    }
-    wasalive=false
+  if (!alive && aliveTimeout) {
+    mqtt.sendMessage('availability', 'offline')
+    clearTimeout(aliveTimeout);
+    aliveTimeout = null;
   }
 }
 
-setInterval(isalive, 15000, false)
+aliveTimeout = setTimeout(isalive, 15000, false)
 
 eagle.on('message', (message) => {
+  isalive(true)
   Object.keys(message).forEach(function(key) {
     mqtt.sendMessage(key, message[key])
   })
-  isalive(true)
 })
