@@ -28,11 +28,13 @@ if (!host) {
 }
 
 var aliveTimeout;
+var firstMsg;
 
 function isalive(alive) {
   if (alive) {
-    if (!aliveTimeout) {
+    if (!aliveTimeout || firstMsg) {
       mqtt.sendMessage('availability', 'online')
+      firstMsg = false
     } else {
       clearTimeout(aliveTimeout);
     }
@@ -46,6 +48,7 @@ function isalive(alive) {
 }
 
 aliveTimeout = setTimeout(isalive, 15000, false)
+firstMsg = true 
 
 eagle.on('message', (message) => {
   isalive(true)
