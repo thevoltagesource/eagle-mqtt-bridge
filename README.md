@@ -19,7 +19,7 @@ Device status is tracked (```online``` and ```offline```) on topic ```MQTT_TOPIC
 Bridge status is tracked (```online``` and ```offline```) on topic```MQTT_TOPIC/bridge/status``` (retained)
 
 Current supported messages:<br>
-* Instantanious Demand (in Watts): ```MQTT_TOPIC/meter/demand```
+* Instantaneous Demand (in Watts): ```MQTT_TOPIC/meter/demand```
 * Summation Delivered (rounded to neaest kWh or Wh): ```MQTT_TOPIC/meter/delivered```
 * Summation Received (rounded to nearest kWh or Wh): ```MQTT_TOPIC/meter/received```
 * Price / kWh (set by utility or manually entered): ```MQTT_TOPIC/pricing/price```
