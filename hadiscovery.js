@@ -1,6 +1,10 @@
 var messageset = {}
 
 function buildDiscovery(topic_base) {
+	regex = new RegExp('^true$', 'i')
+	const hires = regex.test(process.env.SUMMATION_WATTS) ? true : false
+	const summationunit = hires ? 'Wh' : 'kWh'
+
 	const eagle_device = {
 	  "payload_available": "online",
 	  "payload_not_available": "offline",
@@ -51,7 +55,7 @@ function buildDiscovery(topic_base) {
 	  ...eagle_device,
 	  "name": "Rainforest Eagle Energy Delivered",
 	  "unique_id": "rfeagle_delivered",
-	  "unit_of_measurement": "kWh",
+	  "unit_of_measurement": summationunit,
 	  "state_class": "total_increasing",
 	  "device_class": "energy"
 	}
@@ -62,7 +66,7 @@ function buildDiscovery(topic_base) {
 	  ...eagle_device,
 	  "name": "Rainforest Eagle Energy Received",
 	  "unique_id": "rfeagle_received",
-	  "unit_of_measurement": "kWh",
+	  "unit_of_measurement": summationunit,
 	  "device_class": "energy"  
 	}
 	eagle_meter_received_message["state_topic"] = topic_base + "/meter/received"
