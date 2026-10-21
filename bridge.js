@@ -32,25 +32,31 @@ var firstMsg;
 
 function isalive(alive) {
   if (alive) {
+    logger.debug(aliveTimeout)
     if (!aliveTimeout || firstMsg) {
+      logger.debug('online')
       mqtt.sendMessage('availability', 'online')
       firstMsg = false
     } else {
+      logger.debug('clear timer')
       clearTimeout(aliveTimeout);
     }
-    aliveTimeout = setTimeout(isalive, 15000, false);
+    logger.debug('set timer')
+    aliveTimeout = setTimeout(isalive, 30000, false);
   }
   if (!alive && aliveTimeout) {
+    logger.debug('going off')
     mqtt.sendMessage('availability', 'offline')
     clearTimeout(aliveTimeout);
     aliveTimeout = null;
   }
 }
 
-aliveTimeout = setTimeout(isalive, 15000, false)
+//aliveTimeout = setTimeout(isalive, 30000, false)
 firstMsg = true 
 
 eagle.on('message', (message) => {
+  logger.debug('got a message')
   isalive(true)
   Object.keys(message).forEach(function(key) {
     mqtt.sendMessage(key, message[key])

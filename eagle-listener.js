@@ -33,6 +33,8 @@ http.listen(port, () => logger.info(`Listening for Eagle messages on port ${port
 const processMessage = function(msg) {
   for (const [type, nodes] of Object.entries(msg)) {
     for (const node of nodes) {
+      // logger.debug(type)
+      // logger.debug(node)
       processNode(type, node)
     }
   }
@@ -98,8 +100,8 @@ const processNode = function(type, node) {
       break
     case 'networkinfo':  // v1
     case 'connectionstatus':  // v2
-      var status = node.status[0]
-      var signal = parseInt(node.linkstrength[0], 16)
+      //var status = node.status[0]
+      //var signal = parseInt(node.linkstrength[0], 16)
       var channel = parseInt(node.channel[0], 10)
       //{ devicemacid: [ '0xd8d5b90000003e58' ],
       //  coordmacid: [ '0x00078100001d2c64' ],
@@ -110,7 +112,7 @@ const processNode = function(type, node) {
       //  shortaddr: [ '0x3cc9' ],
       //  linkstrength: [ '0x5a' ],
       //  port: [ '/dev/ttySP0' ] }
-      var message = {'zigbee/status': status, 'zigbee/signal': signal, 'zigbee/channel': channel}
+      var message = {'zigbee/channel': channel}
       break
     case 'messagecluster':
       //{ devicemacid: [ '0xd8d5b90000003e58' ],
