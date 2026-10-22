@@ -4,4 +4,5 @@ WORKDIR /app
 COPY *.js* ./
 RUN npm ci
 
-CMD [ "npm", "start" ]
+# Run node directly so it receives SIGTERM from docker stop
+CMD [ "node", "bridge.js" ]

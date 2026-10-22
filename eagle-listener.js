@@ -3,7 +3,7 @@ const xmlparser = require('express-xml-bodyparser')
 const EventEmitter = require('events')
 const logger = require('./logger.js')
 
-regex = new RegExp('^\\d{1,5}$')
+let regex = new RegExp('^\\d{1,5}$')
 const port = regex.test(process.env.LISTEN_PORT) ? process.env.LISTEN_PORT : 3000
 
 regex = new RegExp('^true$', 'i')
@@ -17,8 +17,9 @@ http.use(xmlparser({ignoreAttrs: true}))
 
 http.post('/', function(req, res) {
   res.send('OK')
-  if ('rainforest' in req.body) {
-     processMessage(req.body.rainforest)
+  if (req.body && typeof req.body === 'object' && 'rainforest' in req.body) {
+    module.exports.emit('alive')
+    processMessage(req.body.rainforest)
   } else {
     logger.debug('Received invalid data in POST')
   }
@@ -32,10 +33,15 @@ http.listen(port, () => logger.info(`Listening for Eagle messages on port ${port
 
 const processMessage = function(msg) {
   for (const [type, nodes] of Object.entries(msg)) {
+    if (!Array.isArray(nodes)) continue
     for (const node of nodes) {
-      // logger.debug(type)
-      // logger.debug(node)
-      processNode(type, node)
+      try {
+        processNode(type, node)
+      } catch (err) {
+        // One malformed or unexpected node must not drop the rest of the POST
+        logger.warn(`Could not process ${type} message: ${err.message}`)
+        logger.debug(JSON.stringify(node))
+      }
     }
   }
 }
@@ -100,9 +106,12 @@ const processNode = function(type, node) {
       break
     case 'networkinfo':  // v1
     case 'connectionstatus':  // v2
-      //var status = node.status[0]
-      //var signal = parseInt(node.linkstrength[0], 16)
-      var channel = parseInt(node.channel[0], 10)
+      // Fields vary by model and firmware: EAGLE-200 ConnectionStatus has
+      // status and linkstrength, EAGLE 3 NetworkInfo does not (issue #19).
+      var message = {}
+      if (node.status) message['zigbee/status'] = node.status[0]
+      if (node.linkstrength) message['zigbee/signal'] = parseInt(node.linkstrength[0], 16)
+      if (node.channel) message['zigbee/channel'] = parseInt(node.channel[0], 10)
       //{ devicemacid: [ '0xd8d5b90000003e58' ],
       //  coordmacid: [ '0x00078100001d2c64' ],
       //  status: [ 'Connected' ],
@@ -112,7 +121,6 @@ const processNode = function(type, node) {
       //  shortaddr: [ '0x3cc9' ],
       //  linkstrength: [ '0x5a' ],
       //  port: [ '/dev/ttySP0' ] }
-      var message = {'zigbee/channel': channel}
       break
     case 'messagecluster':
       //{ devicemacid: [ '0xd8d5b90000003e58' ],
@@ -186,7 +194,7 @@ const processNode = function(type, node) {
     default:
       logger.debug('Unknown message type: ' + type)
   }
-  if (message) {
+  if (message && Object.keys(message).length) {
       logger.debug(message)
       module.exports.emit('message', message)
   }

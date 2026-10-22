@@ -14,9 +14,12 @@ Settings are passed to the app through environment variables.
 * LOG_LEVEL=info - Specify desired log level, default is ```info```.
 * SUMMATION_WATTS=false - Set to ```true``` for summation values in Watt Hours (Wh), default is ```false``` for Kilowatt Hours (kWh)
 * HA_DISCOVERY=false - Set to ```true``` to publish Home Assistant discovery messages.
+* ALIVE_TIMEOUT=60 - Seconds without any data from the Eagle before it is reported offline, default is ```60```.
 
-Device status is tracked (```online``` and ```offline```) on topic ```MQTT_TOPIC/availability```<br>
-Bridge status is tracked (```online``` and ```offline```) on topic```MQTT_TOPIC/bridge/status``` (retained)
+Bridge status is tracked (```online``` and ```offline```) on topic ```MQTT_TOPIC/bridge/status``` (retained). The broker sets it to ```offline``` (Last Will) if the bridge disconnects unexpectedly.<br>
+Eagle status is tracked (```online``` and ```offline```) on topic ```MQTT_TOPIC/availability``` (retained). It is ```offline``` when the bridge starts, ```online``` as soon as the Eagle sends data, and ```offline``` again after ```ALIVE_TIMEOUT``` seconds without data. It is only meaningful while the bridge status is ```online```.
+
+With discovery enabled, the Eagle sensors are available only when both topics are ```online```. A **Rainforest Eagle Reporting** binary sensor is also created: ```on``` when the Eagle is sending data, ```off``` when the bridge is running but the Eagle is silent, and unavailable when the bridge is down. It can be used to trigger an automation, such as power-cycling a locked-up Eagle.
 
 Current supported messages:<br>
 * Instantanious Demand (in Watts): ```MQTT_TOPIC/meter/demand```

@@ -1,9 +1,11 @@
 const mqtt = require('mqtt')
+const EventEmitter = require('events')
 const logger = require('./logger.js')
 const hadiscovery = require('./hadiscovery.js')
 
-class MqttClient {
+class MqttClient extends EventEmitter {
   constructor(host, username, password, topic_base, discovery) {
+    super()
     this.client = null
     this.discovery = discovery
     this.topic_base = topic_base
@@ -44,6 +46,7 @@ class MqttClient {
           this.client.publish(key, hadiscovery.messageset[key], {retain: true})
         }
       }
+      this.emit('connect')
     })
 
     this.client.on('close', () => {
@@ -53,6 +56,13 @@ class MqttClient {
 
   sendMessage(topic, message, flag=false) {
       this.client.publish(this.topic_base + '/' + topic, message.toString(), {retain: flag})
+  }
+
+  shutdown(callback) {
+    if (!this.client || !this.client.connected) return callback()
+    this.client.publish(this.topic_base + '/bridge/status', 'offline', {retain: true}, () => {
+      this.client.end(false, {}, callback)
+    })
   }
 
 }

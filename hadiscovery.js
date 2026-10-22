@@ -1,9 +1,14 @@
 var messageset = {}
 
 function buildDiscovery(topic_base) {
+	// Eagle entities are available only while the bridge is online (bridge LWT)
+	// AND the Eagle is reporting (retained availability published by the bridge).
 	const eagle_device = {
-	  "payload_available": "online",
-	  "payload_not_available": "offline",
+	  "availability": [
+	    {"topic": topic_base + "/bridge/status", "payload_available": "online", "payload_not_available": "offline"},
+	    {"topic": topic_base + "/availability", "payload_available": "online", "payload_not_available": "offline"}
+	  ],
+	  "availability_mode": "all",
 	  "device": {
 	    "identifiers": [
 	      "rfeagle"
@@ -11,10 +16,9 @@ function buildDiscovery(topic_base) {
 	    "name": "Rainforest Eagle",
 	    "manufacturer": "Rainforest Automation",
 	    "model": "Eagle",
-	    "via_device": "Eagle to MQTT Bridge"
+	    "via_device": "tvse2m"
 	  }
 	}
-	eagle_device["availability_topic"] = topic_base + "/availability"
 
 
 	const bridge_topic = 'homeassistant/binary_sensor/tvs_bridge_status/config'
@@ -116,7 +120,25 @@ function buildDiscovery(topic_base) {
 	}
 	eagle_zigbee_channel_message["state_topic"] = topic_base + "/zigbee/channel"
 
+	// Eagle Reporting: on = Eagle is sending data, off = bridge is up but the
+	// Eagle is silent (e.g. locked up), unavailable = bridge is down (no proof
+	// either way). Intended as the trigger for an Eagle reboot automation.
+	const eagle_reporting_topic = 'homeassistant/binary_sensor/rfeagle_reporting/config'
+	const eagle_reporting_message = {
+	  "name": "Rainforest Eagle Reporting",
+	  "unique_id": "rfeagle_reporting",
+	  "state_topic": topic_base + "/availability",
+	  "payload_on": "online",
+	  "payload_off": "offline",
+	  "availability_topic": topic_base + "/bridge/status",
+	  "payload_available": "online",
+	  "payload_not_available": "offline",
+	  "device_class": "connectivity",
+	  "device": eagle_device.device
+	}
+
 	messageset[bridge_topic] = JSON.stringify(bridge_message)
+	messageset[eagle_reporting_topic] = JSON.stringify(eagle_reporting_message)
 	messageset[eagle_meter_demand_topic] = JSON.stringify(eagle_meter_demand_message)
 	messageset[eagle_meter_delivered_topic] = JSON.stringify(eagle_meter_delivered_message),
 	messageset[eagle_meter_received_topic] = JSON.stringify(eagle_meter_received_message),
